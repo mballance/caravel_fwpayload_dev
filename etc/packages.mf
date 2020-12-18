@@ -1,4 +1,6 @@
 
-# fwrisc@https://github.com/mballance/fwrisc.git
-# fw-wishbone-interconnect@https://github.com/featherweight-ip/fw-wishbone-interconnect.git
+fwrisc@https://github.com/mballance/fwrisc.git
+fw-wishbone-interconnect@https://github.com/featherweight-ip/fw-wishbone-interconnect.git
+fw-wishbone-bridges@https://github.com/featherweight-ip/fw-wishbone-bridges.git
+
 

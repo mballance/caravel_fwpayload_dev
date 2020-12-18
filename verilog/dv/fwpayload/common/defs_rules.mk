@@ -1,10 +1,11 @@
 
 COMMON_DIR    := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+PACKAGES_DIR  := $(abspath $(COMMON_DIR)/../../../../packages)
+
 
 ifneq (1,$(RULES))
 RTL_DIR       := $(abspath $(COMMON_DIR)/../../../rtl)
 GL_DIR        := $(abspath $(COMMON_DIR)/../../../gl)
-PACKAGES_DIR  := $(abspath $(COMMON_DIR)/../../../../packages)
 FIRMWARE_PATH := $(abspath $(COMMON_DIR)/../../caravel)
 SIM ?= icarus
 SIMTYPE ?= functional
@@ -26,9 +27,9 @@ export PATH
 #********************************************************************
 #* Source setup
 #********************************************************************
-FWRISC_SRCS = $(wildcard $(RTL_DIR)/fwpayload/fwrisc/rtl/*.sv)
-INCDIRS += $(RTL_DIR)/fwpayload/fwrisc/rtl
-INCDIRS += $(RTL_DIR)/fwpayload/fwprotocol-defs/src/sv
+FWRISC_SRCS = $(wildcard $(PACKAGES_DIR)/fwrisc/rtl/*.sv)
+INCDIRS += $(PACKAGES_DIR)/fwrisc/rtl
+INCDIRS += $(PACKAGES_DIR)/fwprotocol-defs/src/sv
 
 DEFINES += MPRJ_IO_PADS=38
 
@@ -48,9 +49,9 @@ ifneq (fullchip,$(SIMLEVEL))
 SRCS += $(RTL_DIR)/fwpayload/user_proj_example.v
 endif
 SRCS += $(RTL_DIR)/fwpayload/fwpayload.v
-SRCS += $(RTL_DIR)/fwpayload/fw-wishbone-bridges/verilog/rtl/wb_clockdomain_bridge.v
-SRCS += $(RTL_DIR)/fwpayload/fw-wishbone-interconnect/verilog/rtl/wb_interconnect_NxN.v
-SRCS += $(RTL_DIR)/fwpayload/fw-wishbone-interconnect/verilog/rtl/wb_interconnect_arb.v
+SRCS += $(PACKAGES_DIR)/fw-wishbone-bridges/verilog/rtl/wb_clockdomain_bridge.v
+SRCS += $(PACKAGES_DIR)/fw-wishbone-interconnect/verilog/rtl/wb_interconnect_NxN.v
+SRCS += $(PACKAGES_DIR)/fw-wishbone-interconnect/verilog/rtl/wb_interconnect_arb.v
 SRCS += $(RTL_DIR)/fwpayload/spram_32x256.sv
 SRCS += $(RTL_DIR)/fwpayload/spram_32x512.sv
 SRCS += $(RTL_DIR)/fwpayload/spram.v

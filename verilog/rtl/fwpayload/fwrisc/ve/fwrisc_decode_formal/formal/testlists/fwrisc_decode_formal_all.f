@@ -1,6 +1,0 @@
-
-
-tests/fwrisc_decode_formal_i32_btype.f
-tests/fwrisc_decode_formal_i32_itype.f
-tests/fwrisc_decode_formal_i32_lui.f
-tests/fwrisc_decode_formal_i32_rtype.f
