@@ -1,0 +1,13 @@
+
+packages/
+simv.*
+obj_dir/
+__pycache__/
+results.xml
+
+*.fst
+*.vcd
+*.wlf
+
+pybfms_gen.*
+
