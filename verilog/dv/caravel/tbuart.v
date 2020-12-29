@@ -50,7 +50,9 @@ module tbuart (
 	// 9600 baud default and will bounce up to higher baud rates when
 	// passed specific command words.
 
+`ifndef VERILATOR
 	always #1500 clk <= (clk === 1'b0);
+`endif
 
 	always @(posedge clk) begin
 		recv_divcnt <= recv_divcnt + 1;

@@ -104,13 +104,10 @@ module mgmt_core (
 	wire irq_spi;
 
 	// JTAG (to be implemented)
-	wire jtag_out;
 	wire jtag_out_pre = 1'b0;
-	wire jtag_outenb = 1'b1;
 	wire jtag_oenb_state;
 
 	// SDO
-	wire sdo_out;
 	wire sdo_out_pre;
 	wire sdo_oenb_state;
 
@@ -125,7 +122,7 @@ module mgmt_core (
 	assign sdo_out = (sdo_oenb_state == 1'b0) ? mgmt_out_data[1] : sdo_out_pre;
 	assign jtag_out = (jtag_oenb_state == 1'b0) ? mgmt_out_data[0] : jtag_out_pre;
 
-	caravel_clocking clocking(
+	caravel_clocking u_clocking(
 	`ifdef USE_POWER_PINS
 		.vdd1v8(VPWR),
 		.vss(VGND),

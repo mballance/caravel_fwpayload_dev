@@ -184,7 +184,7 @@ module simple_spi_master (
     assign	  sck = (enable == 1'b0) ? 1'bz : (invsck) ? ~isck : isck;
 
     // No bidirectional 3-pin mode defined, so SDO is enabled whenever CSB is low.
-    assign	  sdoenb = icsb;
+    wire	  sdoenb = icsb;
     // assign	  sdo = (enable == 1'b0) ? 1'bz : icsb ? 1'bz : isdo;
     assign	  sdo = (enable == 1'b0) ? 1'bz : isdo;
 

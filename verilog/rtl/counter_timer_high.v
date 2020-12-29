@@ -110,21 +110,16 @@ module counter_timer_high (
     input  [31:0] reg_dat_di,
     output [31:0] reg_dat_do,
     input	  stop_in,
-    input	  enable_in,
+    input	  enable_in,     // Enable from chained counter
     input	  is_offset,
-    input	  strobe,
-    output	  stop_out,
-    output	  enable_out,
-    output	  irq_out
+    input	  strobe,        // Count strobe from low word counter
+    output reg	  stop_out,      // Stop signal to low word counter
+    output 	  enable_out,    // Enable to chained counter (sync)
+    output reg	  irq_out
 );
 
 reg [31:0] value_cur;
 reg [31:0] value_reset;
-reg	   irq_out;
-wire	   enable_in;		// Enable from chained counter
-wire	   strobe;		// Count strobe from low word counter
-wire	   enable_out;		// Enable to chained counter (sync)
-reg	   stop_out;		// Stop signal to low word counter
 
 wire [31:0] value_cur_plus;	// Next value, on up-count
 wire [31:0] value_cur_minus;	// Next value, on down-count

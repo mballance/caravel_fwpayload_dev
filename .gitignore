@@ -10,4 +10,6 @@ results.xml
 *.wlf
 
 pybfms_gen.*
+*.hex 
+*.elf
 

@@ -27,7 +27,7 @@ module simple_por(
     output por_l
 );
 
-    wire mid, porb_h;
+    wire mid;
     reg inode;
 
     // This is a behavioral model!  Actual circuit is a resitor dumping
@@ -35,13 +35,19 @@ module simple_por(
     // two schmitt triggers for strong hysteresis/glitch tolerance.
 
     initial begin
-	inode <= 1'b0; 
+	inode = 1'b0; 
     end 
 
     // Emulate current source on capacitor as a 500ns delay either up or
     // down.  Note that this is sped way up for verilog simulation;  the
     // actual circuit is set to a 15ms delay.
 
+`ifdef VERILATOR
+	// Verilator doesn't support delays. We'll drive these
+	// nets from the top-level
+	assign porb_h = inode;
+	assign porb_l = inode;
+`else
     always @(posedge vdd3v3) begin
 	#500 inode <= 1'b1;
     end
@@ -84,6 +90,7 @@ module simple_por(
 	.A(porb_h),
 	.X(porb_l)
     );
+`endif /* VERILATOR */
 
     // since this is behavioral anyway, but this should be
     // replaced by a proper inverter

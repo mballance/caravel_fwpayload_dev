@@ -16,7 +16,8 @@
 #****************************************************************************
 
 ifneq (1,$(RULES))
-VLSIM := $(PACKAGES_DIR)/python/bin/vlsim
+#VLSIM := $(PACKAGES_DIR)/python/bin/vlsim
+VLSIM := python3 -m vlsim
 PYBFMS_DPI_LIB := $(shell $(PACKAGES_DIR)/python/bin/pybfms lib)
 COCOTB_PREFIX := $(shell $(PACKAGES_DIR)/python/bin/cocotb-config --prefix)
 
@@ -35,6 +36,7 @@ VLSIM_OPTIONS += --top-module $(TOP_MODULE)
 VLSIM_OPTIONS += $(foreach inc,$(INCDIRS),+incdir+$(inc))
 VLSIM_OPTIONS += $(foreach def,$(DEFINES),+define+$(def))
 SIMV_ARGS += $(foreach vpi,$(VPI_LIBS),+vpi=$(vpi))
+SIMV_ARGS += +vlsim.timeout=$(TIMEOUT)
 
 DPI_LIBS += $(PYBFMS_DPI_LIB)
 VPI_LIBS += $(COCOTB_PREFIX)/cocotb/libs/libcocotbvpi_verilator.so
@@ -47,7 +49,7 @@ $(SIMV) : $(SRCS) pybfms_gen.sv pybfms_gen.c
 	$(VLSIM) -o $@ $(VLSIM_CLKSPEC) $(VLSIM_OPTIONS) $(SRCS) pybfms_gen.sv pybfms_gen.c \
 		$(foreach l,$(DPI_LIBS),$(l))
 
-run : $(SIMV)
+run : $(SIMV) $(RUN_DEPS)
 	./$(SIMV) $(SIMV_ARGS)
 	
 pybfms_gen.sv :

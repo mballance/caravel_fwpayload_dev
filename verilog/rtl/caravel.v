@@ -38,6 +38,10 @@
 
 /* NOTE: Need to pass the PDK root directory to iverilog with option -I */
 
+`ifdef VERILATOR
+// Use Verilator-friendly models
+`include "sky130_verilator.v"
+`else
 `include "libs.ref/sky130_fd_io/verilog/sky130_fd_io.v"
 `include "libs.ref/sky130_fd_io/verilog/sky130_ef_io.v"
 `include "libs.ref/sky130_fd_io/verilog/sky130_ef_io__gpiov2_pad_wrapped.v"
@@ -46,6 +50,7 @@
 `include "libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v"
 `include "libs.ref/sky130_fd_sc_hvl/verilog/primitives.v"
 `include "libs.ref/sky130_fd_sc_hvl/verilog/sky130_fd_sc_hvl.v"
+`endif
 
 `ifdef GL
 	`include "gl/mgmt_core.v"
@@ -61,7 +66,9 @@
 	`include "mgmt_core.v"
 	`include "digital_pll.v"
 	`include "DFFRAM.v"
+`ifdef USE_CUSTOM_DFFRAM
 	`include "DFFRAMBB.v"
+`endif
 	`include "storage.v"
 	`include "user_id_programming.v"
 	`include "clock_div.v"

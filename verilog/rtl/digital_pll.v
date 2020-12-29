@@ -18,7 +18,11 @@
 // Technically this is a frequency locked loop, not a phase locked loop.
 
 `include "digital_pll_controller.v"
+`ifndef VERILATOR
+// Verilator doesn't support delays, so we'll
+// drive the clock from the testbench
 `include "ring_osc2x13.v"
+`endif
 
 module digital_pll(
 `ifdef USE_POWER_PINS
@@ -53,11 +57,13 @@ module digital_pll(
     assign itrim = (dco == 1'b0) ? otrim : ext_trim;
     assign creset = (dco == 1'b0) ? ireset : 1'b1;
 
+`ifndef VERILATOR
     ring_osc2x13 ringosc (
         .reset(ireset),
         .trim(itrim),
         .clockp(clockp)
     );
+`endif
 
     digital_pll_controller pll_control (
         .reset(creset),

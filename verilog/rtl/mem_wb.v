@@ -29,7 +29,7 @@ module mem_wb (
     input wb_cyc_i,
     input wb_stb_i,
 
-    output wb_ack_o,
+    output reg wb_ack_o,
     output [31:0] wb_dat_o
     
 );
@@ -52,7 +52,6 @@ module mem_wb (
     */ 
 
     reg wb_ack_read;
-    reg wb_ack_o;
 
     always @(posedge wb_clk_i) begin
         if (wb_rst_i == 1'b 1) begin

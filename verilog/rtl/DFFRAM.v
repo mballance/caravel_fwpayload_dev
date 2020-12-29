@@ -16,7 +16,7 @@
 `default_nettype none
 `ifndef USE_CUSTOM_DFFRAM
 
-module DFFRAM(
+module DFFRAM #(parameter COLS=1) (
 `ifdef USE_POWER_PINS
     input VPWR,
     input VGND,

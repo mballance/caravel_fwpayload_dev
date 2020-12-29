@@ -5,7 +5,7 @@ RTL_DIR := $(abspath $(TEST_DIR)/../../../rtl)
 
 TEST_NAME := $(notdir $(TEST_DIR))
 
-TIMEOUT=2ms
+TIMEOUT=10ms
 SIMLEVEL=fullchip
 
 DEFINES += SIM FUNCTIONAL TEST_FIRMWARE_HEX=\"$(TEST_NAME).hex\"
@@ -29,7 +29,7 @@ export PYTHONPATH
 MODULE=fwpayload_tests.$(TEST_NAME)
 export MODULE
 
-VLSIM_OPTIONS += -Wno-fatal --autoflush
+VLSIM_OPTIONS += -Wno-fatal -Wno-width --autoflush
 
 RUN_DEPS += $(TEST_NAME).hex
 

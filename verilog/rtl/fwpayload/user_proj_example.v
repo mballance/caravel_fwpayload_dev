@@ -99,9 +99,9 @@ module user_proj_example #(
     end
     
     // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign payload_clock = (~la_oen[LA_CLOCK]) ? la_data_in[LA_CLOCK]: clock;
-    assign payload_sys_reset = (~la_oen[LA_RESET_SYS]) ? ~la_data_in[LA_RESET_SYS]: wb_rst_i;
-    assign payload_core_reset = (~la_oen[LA_RESET_CORE]) ? ~la_data_in[LA_RESET_CORE]: wb_rst_i;
+    wire payload_clock = (~la_oen[LA_CLOCK]) ? la_data_in[LA_CLOCK]: clock;
+    wire payload_sys_reset = (~la_oen[LA_RESET_SYS]) ? ~la_data_in[LA_RESET_SYS]: wb_rst_i;
+    wire payload_core_reset = (~la_oen[LA_RESET_CORE]) ? ~la_data_in[LA_RESET_CORE]: wb_rst_i;
     
 	wire 		wba_stb_i = (~la_oen[LA_WBA_STB_CYC])?la_data_in[LA_WBA_STB_CYC]:1'b0;
 	wire 		wba_cyc_i = (~la_oen[LA_WBA_STB_CYC])?la_data_in[LA_WBA_STB_CYC]:1'b0;

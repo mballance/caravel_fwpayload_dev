@@ -299,12 +299,6 @@ module spimemio (
         xfer_io3_90 <= xfer_io3_do;
     end
 
-    wire pass_thru;
-    wire pass_thru_csb;
-    wire pass_thru_sck;
-    wire pass_thru_sdi;
-    wire pass_thru_sdo;
-
     assign flash_csb = (pass_thru) ? pass_thru_csb : (config_en ? xfer_csb : config_csb);
     assign flash_clk = (pass_thru) ? pass_thru_sck : (config_en ? xfer_clk : config_clk);
 

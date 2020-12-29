@@ -73,6 +73,9 @@
 	.SRC_BDY_LVC1(L1), \
 	.SRC_BDY_LVC2(L2)
 
+`ifdef VERILATOR
+`define INPUT_PAD(X,Y) assign Y = X
+`else
 `define INPUT_PAD(X,Y) \
 	wire loop_``X; \
 	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
@@ -104,7 +107,11 @@
 		.IN_H(), \
 		.TIE_HI_ESD(), \
 		.TIE_LO_ESD(loop_``X) )
+`endif
 
+`ifdef VERILATOR
+`define OUTPUT_PAD(X,Y,INPUT_DIS,OUT_EN_N) assign X = (OUT_EN_N)?1'bz:Y
+`else
 `define OUTPUT_PAD(X,Y,INPUT_DIS,OUT_EN_N) \
 	wire loop_``X; \
 	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
@@ -136,7 +143,13 @@
 		.IN_H(), \
 		.TIE_HI_ESD(), \
 		.TIE_LO_ESD(loop_``X)) 
+`endif
 
+`ifdef VERILATOR
+`define INOUT_PAD(X,Y,Y_OUT,INPUT_DIS,OUT_EN_N,MODE) \
+	assign X = (OUT_EN_N == 0)?Y_OUT:1'bz; \
+	assign Y = X
+`else
 `define INOUT_PAD(X,Y,Y_OUT,INPUT_DIS,OUT_EN_N,MODE) \
 	wire loop_``X; \
 	sky130_ef_io__gpiov2_pad_wrapped X``_pad ( \
@@ -168,5 +181,6 @@
 		.IN_H(), \
 		.TIE_HI_ESD(), \
 		.TIE_LO_ESD(loop_``X) )
+`endif
 
 // `default_nettype wire

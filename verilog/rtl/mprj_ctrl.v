@@ -114,7 +114,7 @@ module mprj_ctrl #(
     output sdo_oenb_state,
     output jtag_oenb_state,
     input  [`MPRJ_IO_PADS-1:0] mgmt_gpio_in,
-    output [`MPRJ_IO_PADS-1:0] mgmt_gpio_out
+    output [`MPRJ_IO_PADS-1:0] mgmt_gpio_out  // I/O write data output when input disabled
 );
 
 `define IDLE	2'b00
@@ -131,7 +131,6 @@ module mprj_ctrl #(
 
     reg  [IO_CTRL_BITS-1:0] io_ctrl[`MPRJ_IO_PADS-1:0];  // I/O control, 1 word per gpio pad
     reg  [`MPRJ_IO_PADS-1:0] mgmt_gpio_outr; 	 // I/O write data, 1 bit per gpio pad
-    wire [`MPRJ_IO_PADS-1:0] mgmt_gpio_out;	 // I/O write data output when input disabled
     reg  [`MPRJ_PWR_PADS-1:0] pwr_ctrl_out;	 // Power write data, 1 bit per power pad
     reg xfer_ctrl;			 // Transfer control (1 bit)
 
@@ -142,10 +141,6 @@ module mprj_ctrl #(
     wire selected;
     wire [`MPRJ_IO_PADS-1:0] io_ctrl_sel;
     reg [31:0] iomem_rdata_pre;
-
-    wire [`MPRJ_IO_PADS-1:0] mgmt_gpio_in;
-
-    wire sdo_oenb_state, jtag_oenb_state;
 
     // JTAG and housekeeping SDO are normally controlled by their respective
     // modules with OEB set to the default 1 value.  If configured for an
@@ -303,12 +298,8 @@ module mprj_ctrl #(
     reg [3:0]  xfer_count;
     reg [5:0]  pad_count;
     reg [1:0]  xfer_state;
-    reg	       serial_clock;
-    reg	       serial_resetn;
 
     reg [IO_CTRL_BITS-1:0] serial_data_staging;
-
-    wire       serial_data_out;
 
     assign serial_data_out = serial_data_staging[IO_CTRL_BITS-1];
     assign busy = (xfer_state != `IDLE);

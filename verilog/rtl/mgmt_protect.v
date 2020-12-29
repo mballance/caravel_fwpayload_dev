@@ -88,11 +88,6 @@ module mgmt_protect (
 	wire mprj_vdd_logic1;
 	wire mprj2_vdd_logic1;
 
-	wire user1_vcc_powergood;
-	wire user2_vcc_powergood;
-	wire user1_vdd_powergood;
-	wire user2_vdd_powergood;
-
 	wire [127:0] la_data_in_mprj_bar;
 
         mprj_logic_high mprj_logic_high_inst (

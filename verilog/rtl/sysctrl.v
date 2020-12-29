@@ -108,23 +108,12 @@ module sysctrl #(
     input  usr2_vcc_pwrgood,
     input  usr1_vdd_pwrgood,
     input  usr2_vdd_pwrgood,
-    output clk1_output_dest,
-    output clk2_output_dest,
-    output trap_output_dest,
-    output irq_7_inputsrc,
-    output irq_8_inputsrc
+    output reg clk1_output_dest,
+    output reg clk2_output_dest,
+    output reg trap_output_dest,
+    output reg irq_7_inputsrc,
+    output reg irq_8_inputsrc
 ); 
-
-    reg clk1_output_dest;
-    reg clk2_output_dest;
-    reg trap_output_dest;
-    reg irq_7_inputsrc;
-    reg irq_8_inputsrc;
-
-    wire usr1_vcc_pwrgood;
-    wire usr2_vcc_pwrgood;
-    wire usr1_vdd_pwrgood;
-    wire usr2_vdd_pwrgood;
 
     wire pwrgood_sel;
     wire clk_out_sel;

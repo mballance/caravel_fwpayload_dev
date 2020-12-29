@@ -13,8 +13,12 @@
 `include "tbuart.v"
  */
 
-module fullchip_tb(input clock);
-	
+module fullchip_tb(
+	input 		clk,
+	input 		clkp,
+	input		clk_1500ns);
+
+	wire clock;
 `ifdef HAVE_HDL_CLOCKGEN
 	reg clk_r = 0;
 	initial begin
@@ -24,6 +28,11 @@ module fullchip_tb(input clock);
 		end
 	end
 	assign clock = clk_r;
+`else
+	assign clock = clk;
+	assign u_tbuart.clk = clk_1500ns;
+	assign uut.soc.pll.clockp[0] = (uut.soc.pll.enable)?clk:1'b0;
+	assign uut.soc.pll.clockp[1] = (uut.soc.pll.enable)?clkp:1'b0;
 `endif
 	
 `ifdef IVERILOG
@@ -44,8 +53,8 @@ module fullchip_tb(input clock);
 			$finish();
 		end		
 `endif
-    	reg RSTB;
-	reg power1, power2 /*verilator public*/;
+    	reg RSTB = 1;
+	reg power1=0, power2=0;
 
     	wire gpio;
 	wire uart_tx;
@@ -61,6 +70,7 @@ module fullchip_tb(input clock);
 //		clock = 0;
 //	end
 
+`ifndef VERILATOR
 	initial begin
 		RSTB <= 1'b0;
 		#1000;
@@ -76,14 +86,84 @@ module fullchip_tb(input clock);
 		#200;
 		power2 <= 1'b1;
 	end
+`else
+	// TODO: This logic works for all simulators
+	reg[15:0]	seq_count = 0;
+	reg[3:0]	seq_state = 0;
+	always @(posedge clk) begin
+		case (seq_state) 
+			0: begin
+				power1 <= 1'b0;
+				power2 <= 1'b0;
+				RSTB <= 1'b1;
+				seq_state <= 1;
+				seq_count <= 0;
+				// Need to produce a negative edge on power-on
+				// Event simulation gets this from an X->0
+				// transition.
+				// Must explicitly cause this for cycle sim
+				uut.por.inode <= 1'b1;
+			end
+			1: begin // assert reset
+				if (seq_count == 5) begin
+					RSTB <= 1'b0;
+					seq_count <= 0;
+					seq_state <= 2;
+					uut.por.inode <= 1'b0;
+				end else begin
+					seq_count <= seq_count + 1;
+				end
+			end
+			2: begin // power-up power1
+				if (seq_count == 20) begin
+					seq_count <= 0;
+					seq_state <= 3;
+					power1 <= 1'b1;
+				end else begin
+					seq_count <= seq_count + 1;
+				end
+			end
+			3: begin // power-up power2
+				if (seq_count == 20) begin
+					seq_count <= 0;
+					seq_state <= 4;
+					power2 <= 1'b1;
+				end else begin
+					seq_count <= seq_count + 1;
+				end
+			end
+			4: begin // trigger por 50 clocks after power-on
+				if (seq_count == 50) begin
+					uut.por.inode <= 1'b1;
+					seq_count <= 0;
+					seq_state <= 5;
+				end else begin
+					seq_count <= seq_count + 1;
+				end
+			end
 
-    wire flash_csb;
+			5: begin // release reset
+				if (seq_count == 10) begin
+					RSTB <= 1'b1;
+				end else begin
+					seq_count <= seq_count + 1;
+				end
+			end
+		endcase
+
+	end
+	initial begin
+		$display("%m TODO: RSTB and power sequence");
+	end
+`endif
+
+	wire flash_csb;
 	wire flash_clk;
 	wire flash_io0;
 	wire flash_io1;
 
 	wire VDD1V8;
-    wire VDD3V3;
+        wire VDD3V3;
 	wire VSS;
     
 	assign VDD3V3 = power1;
@@ -127,7 +207,7 @@ module fullchip_tb(input clock);
 	);
 
 	// Testbench UART
-	tbuart tbuart (
+	tbuart u_tbuart (
 		.ser_rx(uart_tx)
 	);
 

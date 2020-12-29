@@ -263,6 +263,10 @@ module chip_io(
     	// free reset.
 
 	wire xresloop;
+`ifdef VERILATOR
+	// Glitch-filtering isn't relevant in Verilator
+	assign resetb_core_h = resetb;
+`else
 	sky130_fd_io__top_xres4v2 resetb_pad (
 		`MGMT_ABUTMENT_PINS
 		`ifndef	TOP_ROUTING
@@ -281,6 +285,7 @@ module chip_io(
 		.PULLUP_H(vssio),	    // Pullup connection for alternate filter input
 		.ENABLE_VDDIO(vccd)
     	);
+`endif
 
 	// Corner cells (These are overlay cells;  it is not clear what is normally
     	// supposed to go under them.)

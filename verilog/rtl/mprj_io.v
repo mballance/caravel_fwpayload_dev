@@ -59,6 +59,11 @@ module mprj_io #(
     wire [`MPRJ_IO_PADS-1:0] loop1_io;
     wire [6:0] no_connect;
 
+`ifdef VERILATOR
+    initial begin
+    	$display("TODO: analog pins with Verilator");
+    end
+`else
     sky130_ef_io__gpiov2_pad_wrapped  area1_io_pad [AREA1PADS - 1:0] (
 	`USER1_ABUTMENT_PINS
 	`ifndef	TOP_ROUTING
@@ -120,6 +125,7 @@ module mprj_io #(
 	    .TIE_HI_ESD(),
 	    .TIE_LO_ESD(loop1_io[`MPRJ_IO_PADS - 1:AREA1PADS])
     );
+`endif
 
 endmodule
 // `default_nettype wire

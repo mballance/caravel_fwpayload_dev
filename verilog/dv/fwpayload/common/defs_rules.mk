@@ -9,11 +9,15 @@ GL_DIR        := $(abspath $(COMMON_DIR)/../../../gl)
 FIRMWARE_PATH := $(abspath $(COMMON_DIR)/../../caravel)
 SIM ?= icarus
 SIMTYPE ?= functional
-TIMEOUT ?= 1ms
+TIMEOUT ?= 10ms
 
 
 PYBFMS_MODULES += wishbone_bfms logic_analyzer_bfms
 VLSIM_CLKSPEC += -clkspec clk=10ns
+ifeq (fullchip,$(SIMLEVEL))
+# Clock for the testbench UART
+VLSIM_CLKSPEC += -clkspec clkp=10ns:2.5ns -clkspec clk_1500ns=15000ns
+endif
 
 #TOP_MODULE ?= fwpayload_tb
 #TB_SRCS ?= $(COMMON_DIR)/sv/fwpayload_tb.sv
